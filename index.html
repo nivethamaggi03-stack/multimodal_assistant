@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Multimodal AI Assistant
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         MAIN CONTAINER
+         ===================================================== -->
+
+    <div class="container">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <header class="header">
+
+            <div class="header-icon">
+                🤖
+            </div>
+
+            <div>
+
+                <h1>
+                    Multimodal AI Assistant
+                </h1>
+
+                <p>
+                    Understand images and generate images
+                    using AI
+                </p>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             IMAGE UNDERSTANDING SECTION
+             ================================================= -->
+
+        <section class="card">
+
+            <div class="section-title">
+
+                <span class="icon">
+                    🖼️
+                </span>
+
+                <div>
+
+                    <h2>
+                        Image Understanding
+                    </h2>
+
+                    <p>
+                        Upload an image to analyze it
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 IMAGE DESCRIPTION FORM
+                 ============================================= -->
+
+            <form
+                action="/describe"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                <label
+                    for="description-image"
+                    class="upload-label"
+                >
+
+                    Select Image
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="description-image"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp,.gif,.bmp,.tif,.tiff"
+                    required
+                >
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+
+                    📝 Describe Image
+
+                </button>
+
+            </form>
+
+
+            <!-- =============================================
+                 IMAGE PREVIEW
+                 ============================================= -->
+
+            {% if uploaded_image %}
+
+            <div class="preview-section">
+
+                <h3>
+                    Uploaded Image
+                </h3>
+
+                <img
+                    src="{{ uploaded_image }}"
+                    class="uploaded-image"
+                    alt="Uploaded image"
+                >
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- =============================================
+                 DESCRIPTION RESULT
+                 ============================================= -->
+
+            {% if description %}
+
+            <div class="result success">
+
+                <h3>
+                    📝 Image Description
+                </h3>
+
+                <div class="result-text">
+
+                    {{ description }}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- =============================================
+                 DESCRIPTION ERROR
+                 ============================================= -->
+
+            {% if description_error %}
+
+            <div class="result error">
+
+                <h3>
+                    ❌ Error
+                </h3>
+
+                <p>
+                    {{ description_error }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- =================================================
+             ASK QUESTIONS SECTION
+             ================================================= -->
+
+        <section class="card">
+
+            <div class="section-title">
+
+                <span class="icon">
+                    💬
+                </span>
+
+                <div>
+
+                    <h2>
+                        Ask Questions About an Image
+                    </h2>
+
+                    <p>
+                        Upload an image and ask a question
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                action="/ask"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+
+                <!-- =========================================
+                     IMAGE UPLOAD
+                     ========================================= -->
+
+                <label
+                    for="question-image"
+                    class="upload-label"
+                >
+
+                    Select Image
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="question-image"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp,.gif,.bmp,.tif,.tiff"
+                    required
+                >
+
+
+                <!-- =========================================
+                     QUESTION
+                     ========================================= -->
+
+                <label
+                    for="question"
+                    class="field-label"
+                >
+
+                    Your Question
+
+                </label>
+
+
+                <textarea
+                    id="question"
+                    name="question"
+                    rows="4"
+                    placeholder="Example: How many people are in the image?"
+                    required
+                >{{ question or '' }}</textarea>
+
+
+                <!-- =========================================
+                     SUBMIT
+                     ========================================= -->
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+
+                    💬 Ask Question
+
+                </button>
+
+            </form>
+
+
+            <!-- =============================================
+                 ANSWER
+                 ============================================= -->
+
+            {% if answer %}
+
+            <div class="result success">
+
+                <h3>
+                    🤖 AI Answer
+                </h3>
+
+                <div class="result-text">
+
+                    {{ answer }}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- =============================================
+                 QUESTION ERROR
+                 ============================================= -->
+
+            {% if question_error %}
+
+            <div class="result error">
+
+                <h3>
+                    ❌ Error
+                </h3>
+
+                <p>
+                    {{ question_error }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- =================================================
+             TEXT TO IMAGE SECTION
+             ================================================= -->
+
+        <section class="card">
+
+            <div class="section-title">
+
+                <span class="icon">
+                    🎨
+                </span>
+
+                <div>
+
+                    <h2>
+                        Text to Image
+                    </h2>
+
+                    <p>
+                        Describe an image and generate it using AI
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                action="/generate"
+                method="POST"
+            >
+
+
+                <!-- =========================================
+                     PROMPT
+                     ========================================= -->
+
+                <label
+                    for="prompt"
+                    class="field-label"
+                >
+
+                    Image Prompt
+
+                </label>
+
+
+                <textarea
+                    id="prompt"
+                    name="prompt"
+                    rows="5"
+                    placeholder="Example: A futuristic city at sunset with flying cars, cinematic lighting, highly detailed"
+                    required
+                >{{ generation_prompt or '' }}</textarea>
+
+
+                <!-- =========================================
+                     GENERATE BUTTON
+                     ========================================= -->
+
+                <button
+                    type="submit"
+                    class="primary-button generate-button"
+                >
+
+                    🎨 Generate Image
+
+                </button>
+
+            </form>
+
+
+            <!-- =============================================
+                 GENERATED IMAGE
+                 ============================================= -->
+
+            {% if generated_image %}
+
+            <div class="generated-section">
+
+                <h3>
+                    ✨ Generated Image
+                </h3>
+
+                <img
+                    src="{{ generated_image }}"
+                    class="generated-image"
+                    alt="AI generated image"
+                >
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- =============================================
+                 GENERATION ERROR
+                 ============================================= -->
+
+            {% if generation_error %}
+
+            <div class="result error">
+
+                <h3>
+                    ❌ Error
+                </h3>
+
+                <p>
+                    {{ generation_error }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- =================================================
+             EXAMPLES
+             ================================================= -->
+
+        <section class="card examples">
+
+            <h2>
+                💡 Example Prompts
+            </h2>
+
+
+            <div class="example-grid">
+
+                <div class="example-item">
+
+                    <strong>
+                        Image Question
+                    </strong>
+
+                    <p>
+                        How many people are in the image?
+                    </p>
+
+                </div>
+
+
+                <div class="example-item">
+
+                    <strong>
+                        Image Question
+                    </strong>
+
+                    <p>
+                        What color is the car?
+                    </p>
+
+                </div>
+
+
+                <div class="example-item">
+
+                    <strong>
+                        Image Description
+                    </strong>
+
+                    <p>
+                        Describe everything visible in this image.
+                    </p>
+
+                </div>
+
+
+                <div class="example-item">
+
+                    <strong>
+                        Text to Image
+                    </strong>
+
+                    <p>
+                        A robot teaching students in a modern
+                        classroom.
+                    </p>
+
+                </div>
+
+
+                <div class="example-item">
+
+                    <strong>
+                        Text to Image
+                    </strong>
+
+                    <p>
+                        A realistic mountain landscape during
+                        sunrise.
+                    </p>
+
+                </div>
+
+
+                <div class="example-item">
+
+                    <strong>
+                        Text to Image
+                    </strong>
+
+                    <p>
+                        A futuristic city with flying cars
+                        at night.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <footer>
+
+            <p>
+                Multimodal AI Assistant
+            </p>
+
+            <p>
+                Groq Vision + Hugging Face Image Generation
+            </p>
+
+        </footer>
+
+
+    </div>
+
+
+</body>
+
+</html>
